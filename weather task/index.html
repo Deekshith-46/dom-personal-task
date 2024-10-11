@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+        }
+        /*card style*/
+        /* From Uiverse.io by bhaveshxrawat */ 
+        .card {
+        width: 40vw;
+        height: 45vh;
+        padding: 10px;
+        background: #07182E;
+        position: relative;
+        display: flex;
+        place-content: center;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0px 0px 151px 15px rgba(196,46,255,0.9);
+        }
+
+        .card .text-up {
+        z-index: 1;
+        color: white;
+        font-size: 1.22em;
+        }
+
+        .card::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+        height: 130%;
+        animation: rotBGimg 3s linear infinite;
+        transition: all 0.2s linear;
+        }
+
+        @keyframes rotBGimg {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+        }
+
+        .card::after {
+        content: '';
+        position: absolute;
+        background: #07182E;
+        inset: 5px;
+        border-radius: 15px;
+        }  
+        #temperature{
+            color: orangered;
+        }
+        #wind-speed{
+            color: lightblue;
+        }
+        #weather-code{
+            color: lightcoral;
+        }
+        #observation-time{
+            color: rgb(223, 223, 104);
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="card">
+        <div class="text-up">
+            <center><h2>Current Weather</h2></center>
+            <p id="temperature">Temperature: <span id="temp"> </span></p>
+            <p id="wind-speed">Wind Speed: <span id="windSp"></span></p>
+            <p id="weather-code">Weather Code: <span id="weatherCode"></span></p>
+            <p id="observation-time">Observation Time: <span id="obTime"></span></p>
+        </div>
+    </div>
+    <script>
+        let tempEl=document.getElementById("temp");
+        let windSpEl=document.getElementById("windSp");
+        let weatherCodeEl=document.getElementById("weatherCode");
+        let obTimeEl=document.getElementById("obTime");
+
+        let url="https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&current_weather=true";
+        fetch(url)
+            .then(response=>response.json())
+            .then(data=>{
+                let main_weather=data.current_weather;
+                let weather_units=data.current_weather_units;
+                tempEl.innerText=`${main_weather.temperature} ${weather_units.temperature}`;
+                windSpEl.innerText=`${main_weather.windspeed} ${weather_units.windspeed}`;
+                weatherCodeEl.innerText=`${main_weather.weathercode}`;
+                obTimeEl.innerText=`${new Date(main_weather.time).toLocaleString()}`
+                // for(var eachWe in main_weather){
+                //     if(eachWe=='temperature'){
+                //         tempEl.innerText=`${main_weather[eachWe]} ${weather_units.temperature}`
+                //     }
+                //     if(eachWe=='windspeed'){
+                //         windSpEl.innerText=`${main_weather[eachWe]}`
+                //     }
+                // }
+            })
+    </script>
+</body>
+</html>
